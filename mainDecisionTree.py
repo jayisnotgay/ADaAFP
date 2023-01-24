@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import QApplication
-from iris_species_predictor import MainWindow
+from iris_species_predictor_DecisionTree import MainWindow
 import sys
 
 if __name__ == '__main__':
