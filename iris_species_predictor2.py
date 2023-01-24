@@ -2,7 +2,6 @@ import numpy as np
 import pandas as pd
 from PySide6.QtWidgets import QMainWindow
 from ui_iris_species_predictor import Ui_MainWindow
-from sklearn.model_selection import train_test_split
 from sklearn import svm
 
 
@@ -12,15 +11,13 @@ class MainWindow(QMainWindow):
 
         df = pd.read_csv("dataset.csv")
         X, y = df.iloc[:, 1:-1].to_numpy(), df.iloc[:, -1].to_numpy()
-        X_train, X_test, y_train, y_test = train_test_split(
-            X, y, test_size=0.33, random_state=0)
 
-        self.classifier = svm.SVC(kernel='linear')
-        self.classifier.fit(X_train, y_train)
-        predictions = self.classifier.predict(X_test)
+        self.classifier = svm.SVC(kernel='linear', random_state=1, gamma=0.001, C=10)
+        self.classifier.fit(X, y)
+        predictions = self.classifier.predict(X)
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
-        self.ui.accuracy_score.setText(self.__accuracy(y_test, predictions))
+        self.ui.accuracy_score.setText(self.__accuracy(y, predictions))
         self.ui.predict_button.clicked.connect(self.__predict_button)
 
     def __accuracy(self, test, predictions):
