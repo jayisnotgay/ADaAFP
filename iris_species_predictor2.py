@@ -3,6 +3,7 @@ import pandas as pd
 from PySide6.QtWidgets import QMainWindow
 from ui_iris_species_predictor import Ui_MainWindow
 from sklearn import svm
+from sklearn.metrics import accuracy_score
 
 
 class MainWindow(QMainWindow):
@@ -15,13 +16,11 @@ class MainWindow(QMainWindow):
         self.classifier = svm.SVC(kernel='linear', random_state=1, gamma=0.001, C=10)
         self.classifier.fit(X, y)
         predictions = self.classifier.predict(X)
+        accuracy = str(accuracy_score(y, predictions) * 100) + "%"
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
-        self.ui.accuracy_score.setText(self.__accuracy(y, predictions))
+        self.ui.accuracy_score.setText(accuracy)
         self.ui.predict_button.clicked.connect(self.__predict_button)
-
-    def __accuracy(self, test, predictions):
-        return f"{(np.sum(test == predictions) / len(test)) * 100}%"
 
     def __predict_button(self):
         try:
